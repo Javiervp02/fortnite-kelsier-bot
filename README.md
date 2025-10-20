@@ -1,4 +1,4 @@
-# Fortnite Kelsier Bot 🤖
+# Fortnite Kelsier Bot 
 
 A Twitter bot that posts daily updates about how long the Kelsier skin has been absent from the Fortnite Item Shop.
 
