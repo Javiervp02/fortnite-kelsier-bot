@@ -53,11 +53,12 @@ class FortniteKelsierBot:
         days, years = self.calculate_days()
         
         phrases = [
-            f"The Kelsier skin has been absent from the Fortnite Item Shop for {days} days ({years:.2f} years).",
+            f"The Kelsier Fortnite skin has been absent from the Fortnite Item Shop for {days} days ({years:.2f} years).",
             f"It's been {days} days ({years:.2f} years) since Kelsier last appeared in the Fortnite Item Shop.",
             f"Day {days} of waiting for Kelsier's return to Fortnite. That's {years:.2f} years!",
-            f"The Kelsier skin hasn't been seen in Fortnite for {days} days ({years:.2f} years).",
+            f"The Kelsier Fortnite skin hasn't been seen in Fortnite for {days} days ({years:.2f} years).",
             f"{days} days and counting since Kelsier was last available in the Fortnite Item Shop ({years:.2f} years).",
+            f"The Kelsier Fortnite skin crawled out of the Pits of Hathsin into Fortnite {days} days ago ({years:.2f} years).",
         ]
         
         main_text = random.choice(phrases)
