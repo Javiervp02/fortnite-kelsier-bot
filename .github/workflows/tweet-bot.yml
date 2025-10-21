@@ -3,12 +3,16 @@ name: Fortnite Kelsier Daily Tweet
 on:
   schedule:
     # Everyday, 30 minutes after the shop refreshes
-    - cron: '33 8 * * *'
+    - cron: '45 8 * * *'
   workflow_dispatch:  # Manual execution
 
 jobs:
   tweet:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+      packages: write
     
     steps:
     - name: 📥 Checkout code
