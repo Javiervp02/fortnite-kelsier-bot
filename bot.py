@@ -27,6 +27,10 @@ class FortniteKelsierBot:
         self.last_appearance = date(2021, 11, 7)
         self.api_url = "https://api.twitter.com/2/tweets"
         self.hashtags = ["#Fortnite", "#Kelsier", "#Mistborn", "#Cosmere"]
+
+        # Fortnite API
+        self.fortnite_api_url = "https://fortniteapi.io/v2/shop"
+        self.fortnite_api_key = os.getenv('FORTNITE_API_KEY') 
     
     def verify_credentials(self):
         """Verify credentials are set"""
@@ -42,6 +46,39 @@ class FortniteKelsierBot:
             raise ValueError(error_msg)
         
         logging.info("✅ All credentials verified")
+
+      def check_shop_for_kelsier(self):
+        """Check if Kelsier skin is in the current item shop"""
+        try:
+            logging.info("🛍️ Checking Fortnite item shop for Kelsier...")
+            
+            headers = {}
+            if self.fortnite_api_key:
+                headers['Authorization'] = self.fortnite_api_key
+            
+            response = requests.get(self.fortnite_api_url, headers=headers, timeout=30)
+            
+            if response.status_code == 200:
+                shop_data = response.json()
+                
+                # Buscar "Kelsier" en los items de la tienda
+                shop_items = shop_data.get('shop', [])
+                
+                for item in shop_items:
+                    name = item.get('name', '').lower()
+                    if 'kelsier' in name:
+                        logging.info("🎉 KELSIER FOUND IN ITEM SHOP!")
+                        return True
+                
+                logging.info("❌ Kelsier not found in current item shop")
+                return False
+            else:
+                logging.warning(f"⚠️ Could not fetch shop data: {response.status_code}")
+                return False
+                
+        except Exception as e:
+            logging.error(f"❌ Error checking Fortnite shop: {e}")
+            return False
     
     def calculate_days(self):
         today = date.today()
@@ -51,8 +88,21 @@ class FortniteKelsierBot:
     
     def generate_tweet_text(self):
         days, years = self.calculate_days()
+
+        if kelsier_in_shop:
+            # Kelsier is back!
+            celebration_phrases = [
+                f"🎉 BREAKING: Kelsier has RETURNED to the Fortnite Item Shop after {days} days ({years:.2f} years)!",
+                f"🚀 IT'S BACK! Kelsier skin is available in Fortnite after {days} days ({years:.2f} years) of waiting!",
+                f"✨ MIRACLE! Kelsier is FINALLY in the Fortnite Item Shop after {days} days ({years:.2f} years)!",
+                f"🏆 THE WAIT IS OVER! Kelsier returns to Fortnite after {days} days ({years:.2f} years)!",
+                f"🎊 UNBELIEVABLE! Kelsier skin is back in Fortnite after {days} days ({years:.2f} years)!"
+            ]
+            main_text = random.choice(celebration_phrases)
+            
+        else
         
-        phrases = [
+        absence_phrases = [
             f"The Kelsier Fortnite skin has been absent from the Fortnite Item Shop for {days} days ({years:.2f} years).",
             f"It's been {days} days ({years:.2f} years) since Kelsier last appeared in the Fortnite Item Shop.",
             f"Day {days} of waiting for Kelsier's return to Fortnite. That's {years:.2f} years!",
@@ -61,7 +111,7 @@ class FortniteKelsierBot:
             f"The Kelsier Fortnite skin crawled out of the Pits of Hathsin into Fortnite {days} days ago ({years:.2f} years).",
         ]
         
-        main_text = random.choice(phrases)
+        main_text = random.choice(absence_phrases)
         hashtags_text = " ".join(self.hashtags)
         
         full_tweet = f"{main_text} {hashtags_text}"
