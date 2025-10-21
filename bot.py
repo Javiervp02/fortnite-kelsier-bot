@@ -47,7 +47,7 @@ class FortniteKelsierBot:
         
         logging.info("✅ All credentials verified")
 
-      def check_shop_for_kelsier(self):
+    def check_shop_for_kelsier(self):
         """Check if Kelsier skin is in the current item shop"""
         try:
             logging.info("🛍️ Checking Fortnite item shop for Kelsier...")
@@ -87,7 +87,11 @@ class FortniteKelsierBot:
         return days, years
     
     def generate_tweet_text(self):
+        """Generate tweet text - checks if Kelsier is in shop"""
         days, years = self.calculate_days()
+        
+        # Primero verificar si Kelsier está en la tienda
+        kelsier_in_shop = self.check_shop_for_kelsier()
 
         if kelsier_in_shop:
             # Kelsier is back!
@@ -100,18 +104,18 @@ class FortniteKelsierBot:
             ]
             main_text = random.choice(celebration_phrases)
             
-        else
+        else:
+            # Kelsier no está en la tienda
+            absence_phrases = [
+                f"The Kelsier Fortnite skin has been absent from the Fortnite Item Shop for {days} days ({years:.2f} years).",
+                f"It's been {days} days ({years:.2f} years) since Kelsier last appeared in the Fortnite Item Shop.",
+                f"Day {days} of waiting for Kelsier's return to Fortnite. That's {years:.2f} years!",
+                f"The Kelsier Fortnite skin hasn't been seen in Fortnite for {days} days ({years:.2f} years).",
+                f"{days} days and counting since Kelsier was last available in the Fortnite Item Shop ({years:.2f} years).",
+                f"The last time the Kelsier Fortnite skin crawled out of the Pits of Hathsin into Fortnite was {days} days ago ({years:.2f} years).",
+            ]
+            main_text = random.choice(absence_phrases)
         
-        absence_phrases = [
-            f"The Kelsier Fortnite skin has been absent from the Fortnite Item Shop for {days} days ({years:.2f} years).",
-            f"It's been {days} days ({years:.2f} years) since Kelsier last appeared in the Fortnite Item Shop.",
-            f"Day {days} of waiting for Kelsier's return to Fortnite. That's {years:.2f} years!",
-            f"The Kelsier Fortnite skin hasn't been seen in Fortnite for {days} days ({years:.2f} years).",
-            f"{days} days and counting since Kelsier was last available in the Fortnite Item Shop ({years:.2f} years).",
-            f"The Kelsier Fortnite skin crawled out of the Pits of Hathsin into Fortnite {days} days ago ({years:.2f} years).",
-        ]
-        
-        main_text = random.choice(absence_phrases)
         hashtags_text = " ".join(self.hashtags)
         
         full_tweet = f"{main_text} {hashtags_text}"
