@@ -5,7 +5,7 @@ A Twitter bot that posts daily updates about how long the Kelsier skin has been 
 ## Features
 
 -  **Daily posts** 30 minutes after the shop refreshes
--  **Possible appearences check** Using FortniteAPI we check if the skin has returned
+-  **Possible appearences check** Using FortniteAPI we check if the skin has returned to the shop
 -  **Randomized messages** with different phrasing each day
 -  **Relevant hashtags**: #Fortnite #Kelsier #Mistborn #Cosmere
 -  **Automatic day calculation** since November 7, 2021
