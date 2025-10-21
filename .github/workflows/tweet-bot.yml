@@ -2,8 +2,8 @@ name: Fortnite Kelsier Daily Tweet
 
 on:
   schedule:
-    # Everyday at 10:00 AM Spanish time
-    - cron: '0 8 * * *'
+    # Everyday, 30 minutes after the shop refreshes
+    - cron: '30 0 * * *'
   workflow_dispatch:  # Manual execution
 
 jobs:
