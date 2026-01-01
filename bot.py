@@ -4,6 +4,7 @@ import random
 import logging
 import os
 import sys
+from requests_oauthlib import OAuth1  # ¡IMPORTANTE!
 
 # Configure logging
 logging.basicConfig(
@@ -14,8 +15,11 @@ logging.basicConfig(
 
 class FortniteKelsierBot:
     def __init__(self):
-        # Solo necesitas UN Bearer Token
-        self.bearer_token = os.getenv('TWITTER_BEARER_TOKEN')
+        # OAuth 1.0a - 4 CREDENCIALES NECESARIAS
+        self.api_key = os.getenv('TWITTER_API_KEY')
+        self.api_secret = os.getenv('TWITTER_API_SECRET')
+        self.access_token = os.getenv('TWITTER_ACCESS_TOKEN')
+        self.access_token_secret = os.getenv('TWITTER_ACCESS_TOKEN_SECRET')
         
         # Fortnite API (opcional)
         self.fortnite_api_key = os.getenv('FORTNITE_API_KEY')
@@ -27,11 +31,17 @@ class FortniteKelsierBot:
         self.fortnite_api_url = "https://fortniteapi.io/v2/shop"
     
     def verify_credentials(self):
-        """Verify Bearer Token is set"""
-        if not self.bearer_token:
-            raise ValueError("❌ Missing TWITTER_BEARER_TOKEN")
+        """Verify all 4 OAuth 1.0a credentials are set"""
+        missing = []
+        if not self.api_key: missing.append("TWITTER_API_KEY")
+        if not self.api_secret: missing.append("TWITTER_API_SECRET")
+        if not self.access_token: missing.append("TWITTER_ACCESS_TOKEN")
+        if not self.access_token_secret: missing.append("TWITTER_ACCESS_TOKEN_SECRET")
         
-        logging.info("✅ Twitter Bearer Token verified")
+        if missing:
+            raise ValueError(f"❌ Missing: {', '.join(missing)}")
+        
+        logging.info("✅ All 4 Twitter credentials verified")
     
     def check_shop_for_kelsier(self):
         """Check if Kelsier skin is in the current item shop"""
@@ -110,22 +120,24 @@ class FortniteKelsierBot:
         return full_tweet
     
     def post_tweet(self):
-        """Post tweet using Bearer Token"""
+        """Post tweet using OAuth 1.0a"""
         tweet_text = self.generate_tweet_text()
         
-        # SIMPLE: Solo Bearer Token
-        headers = {
-            "Authorization": f"Bearer {self.bearer_token}",
-            "Content-Type": "application/json"
-        }
+        # OAuth 1.0a - la forma CORRECTA para API v2 tweets
+        auth = OAuth1(
+            self.api_key,
+            self.api_secret,
+            self.access_token,
+            self.access_token_secret
+        )
         
         payload = {"text": tweet_text}
         
         try:
-            response = requests.post(self.api_url, headers=headers, json=payload, timeout=30)
+            response = requests.post(self.api_url, auth=auth, json=payload, timeout=30)
             
             if response.status_code in [200, 201]:
-                logging.info("✅ Tweet posted!")
+                logging.info("✅ Tweet posted successfully!")
                 return True
             else:
                 logging.error(f"❌ Error {response.status_code}: {response.text[:200]}")
