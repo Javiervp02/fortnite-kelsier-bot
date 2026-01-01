@@ -88,6 +88,16 @@ class FortniteKelsierBot:
                 f"Day {days}: Kelsier absent for {days} days ({years:.2f} years).",
                 f"{days} days since Kelsier in Fortnite ({years:.2f} years).",
                 f"Kelsier watch: {days} days without appearing ({years:.2f} years).",
+                f"Kelsier remains trapped in the Pits of Hathsin while his skin has been absent from Fortnite for {days} days ({years:.2f} years).",
+                f"The Survivor of Hathsin hasn't survived the Fortnite Item Shop rotation for {days} days ({years:.2f} years).",
+                f"Not even with Allomancy could Kelsier return to the Fortnite Shop after {days} days ({years:.2f} years).",
+                f"The Lord of Scars has been scarred by absence: {days} days ({years:.2f} years) without Kelsier in Fortnite.",
+                f"Mistborn legend Kelsier continues to be a 'what if' in Fortnite after {days} days ({years:.2f} years).",
+                f"The Crew's leader is missing from the Fortnite Crew's Item Shop for {days} days ({years:.2f} years).",
+                f"Kelsier's rebellion against the Fortnite Item Shop continues: {days} days ({years:.2f} years) of resistance.",
+                f"The 'too angry to die' Mistborn hasn't been angry enough to return to Fortnite in {days} days ({years:.2f} years).",
+                f"Even the Steel Inquisitors would pity Kelsier's {days}-day ({years:.2f} years) Fortnite absence.",
+                f"The Eleventh Metal remains the eleventh-hour hope after {days} days ({years:.2f} years) without Kelsier in Fortnite.",
             ]
         
         main_text = random.choice(phrases)
