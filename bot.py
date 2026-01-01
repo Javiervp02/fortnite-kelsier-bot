@@ -4,7 +4,7 @@ import random
 import logging
 import os
 import sys
-from requests_oauthlib import OAuth1  # ¡IMPORTANTE!
+from requests_oauthlib import OAuth1
 
 # Configure logging
 logging.basicConfig(
@@ -26,7 +26,8 @@ class FortniteKelsierBot:
         
         self.verify_credentials()
         self.last_appearance = date(2021, 11, 7)
-        self.api_url = "https://api.twitter.com/2/tweets"
+        # Usar API v1.1 que es más estable
+        self.api_url = "https://api.twitter.com/1.1/statuses/update.json"
         self.hashtags = ["#Fortnite", "#Kelsier", "#Mistborn", "#Cosmere"]
         self.fortnite_api_url = "https://fortniteapi.io/v2/shop"
     
@@ -120,10 +121,10 @@ class FortniteKelsierBot:
         return full_tweet
     
     def post_tweet(self):
-        """Post tweet using OAuth 1.0a"""
+        """Post tweet using Twitter API v1.1 (more stable)"""
         tweet_text = self.generate_tweet_text()
         
-        # OAuth 1.0a - la forma CORRECTA para API v2 tweets
+        # OAuth 1.0a
         auth = OAuth1(
             self.api_key,
             self.api_secret,
@@ -131,16 +132,33 @@ class FortniteKelsierBot:
             self.access_token_secret
         )
         
-        payload = {"text": tweet_text}
+        # Headers para evitar Cloudflare
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+            "Accept": "application/json",
+        }
+        
+        # API v1.1 usa "status" en lugar de "text"
+        payload = {"status": tweet_text}
         
         try:
-            response = requests.post(self.api_url, auth=auth, json=payload, timeout=30)
+            response = requests.post(
+                self.api_url, 
+                auth=auth, 
+                headers=headers,
+                data=payload,  # v1.1 usa data, no json
+                timeout=30
+            )
+            
+            logging.info(f"📊 API Response: {response.status_code}")
             
             if response.status_code in [200, 201]:
                 logging.info("✅ Tweet posted successfully!")
                 return True
             else:
-                logging.error(f"❌ Error {response.status_code}: {response.text[:200]}")
+                # Mostrar error completo para debugging
+                error_msg = response.text[:500] if response.text else "No error message"
+                logging.error(f"❌ Error {response.status_code}: {error_msg}")
                 return False
                 
         except Exception as e:
@@ -149,7 +167,7 @@ class FortniteKelsierBot:
 
 def main():
     try:
-        logging.info("🤖 Starting Fortnite Kelsier Bot...")
+        logging.info("🤖 Starting Fortnite Kelsier Bot (API v1.1)...")
         bot = FortniteKelsierBot()
         success = bot.post_tweet()
         
